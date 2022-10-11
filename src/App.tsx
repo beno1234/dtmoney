@@ -1,26 +1,46 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Dashboard } from "./components/Dashboards";
+import { Header } from "./components/Header/Header";
+import { GlobalStyle } from "./styles/global";
+import Modal from "react-modal";
+import { useState } from "react";
+import { NewTransactionModal } from "./components/NewTransactionModal";
+import { TransactionsProvider } from "./hooks/useTransactions";
 
-function App() {
+
+Modal.setAppElement('#root')
+
+
+export function App() {
+  const [isNewTransactionModalOpen, setIsNewTransactionModalOpen] = useState(false);
+
+
+
+  //setar a informacao que o modal esta aberto
+  function handleOpenNewTransactionModal(){
+      setIsNewTransactionModalOpen(true);
+  }
+  //setar a informacao para fechar o modal
+  function handleCloseNewTransactionModal(){
+      setIsNewTransactionModalOpen(false);
+  }
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    //depois de declarar a interface ele entende que transactionsProvider recebe children - que e o conteudo
+    <TransactionsProvider>
+      <Header onOpenNewTransactionModal={handleOpenNewTransactionModal}/>
+
+      <Dashboard />
+
+    <NewTransactionModal 
+    isOpen={isNewTransactionModalOpen}
+    onRequestClose={handleCloseNewTransactionModal}
+    />
+
+      <GlobalStyle />
+    </TransactionsProvider>
   );
 }
 
-export default App;
+
+// contexto = compartilhamento de estados
